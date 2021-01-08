@@ -67,6 +67,28 @@ public class WebAppRunner {
 
         });
 
+        get("/reservations/:reservationId", (req, res)-> {
+            try {
+//                userFilter(req, res);
+            } catch (Exception e){
+                res.status(401);
+                System.out.println("*** Error Finding Reservation : "+e.getMessage());
+                return null;
+            }
+            return FindReservation.handleRequest(req);
+
+        });
+        get("/reservations", (req, res)-> {
+            try {
+//                userFilter(req, res);
+            } catch (Exception e){
+                res.status(401);
+                System.out.println("*** Error Finding Reservation : "+e.getMessage());
+                return null;
+            }
+            return FindReservation.handleRequest(req);
+
+        });
         post("/login", (req, res)->loginUser(req));
         post("/rapidsteptest", (req, res)->{
             try{

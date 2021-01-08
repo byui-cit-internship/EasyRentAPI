@@ -1,7 +1,7 @@
 package com.getsimplex.steptimer.service;
 
-import com.getsimplex.steptimer.model.Customer;
 import com.getsimplex.steptimer.utils.JedisClient;
+import com.getsimplex.steptimer.model.Customer;
 import com.getsimplex.steptimer.utils.JedisData;
 import com.google.gson.Gson;
 import spark.Request;
