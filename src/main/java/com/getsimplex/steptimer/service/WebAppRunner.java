@@ -7,10 +7,13 @@ package com.getsimplex.steptimer.service;
 
 import com.getsimplex.steptimer.model.*;
 import com.getsimplex.steptimer.utils.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
 
+import java.util.Date;
 import java.util.Optional;
 
 import static spark.Spark.*;
@@ -18,7 +21,9 @@ import static spark.Spark.*;
 public class WebAppRunner {
 
     public static void main(String[] args){
-
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+        Long now = (System.currentTimeMillis());
+        System.out.println("The current date is: "+ (now));
 
         Spark.port(getHerokuAssignedPort());
 
@@ -32,6 +37,7 @@ public class WebAppRunner {
         //get("/readPdf", (req, res)->routePdfRequest(req, res));
         post("/user", (req, res)-> callUserDatabase(req));
         post("/reservations",((request, response) -> CreateReservation.handleRequest(request)));
+
 
 
         get ("/stephistory/:customer", (req, res)-> {

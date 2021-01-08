@@ -1,11 +1,17 @@
 package com.getsimplex.steptimer.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Reservation {
     private String reservationId;
     private String customerId;
     private ArrayList<ReservationItem> reservationItems = new ArrayList<>();
+    private Long dueDate;
+
+    public Long getDueDate() { return dueDate; }
+
+    public void setDueDate(Long dueDate) { this.dueDate = dueDate; }
 
     public String getReservationId() {
         return reservationId;
