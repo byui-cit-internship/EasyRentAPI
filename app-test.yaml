@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: easyrent-test
-          image: gcr.io/constellation-275522/EasyRent
+          image: gcr.io/constellation-275522/easyrent
           env:
             - name: REDIS_PASSWORD_DEV
               valueFrom:

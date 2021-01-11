@@ -6,7 +6,7 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/EasyRent:$SHORT_SHA'
+      - 'gcr.io/$PROJECT_ID/easyrent:$SHORT_SHA'
       - '.'
 
   # This step pushes the image to Container Registry
@@ -16,7 +16,7 @@ steps:
     id: Push
     args:
       - 'push'
-      - 'gcr.io/$PROJECT_ID/EasyRent:$SHORT_SHA'
+      - 'gcr.io/$PROJECT_ID/easyrent:$SHORT_SHA'
 
   # This step builds the container image.
   - name: 'gcr.io/cloud-builders/docker'
@@ -24,7 +24,7 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/EasyRent:latest'
+      - 'gcr.io/$PROJECT_ID/easyrent:latest'
       - '.'
 
   # This step pushes the image to Container Registry
@@ -34,15 +34,15 @@ steps:
     id: Push-Latest
     args:
       - 'push'
-      - 'gcr.io/$PROJECT_ID/EasyRent:latest'
+      - 'gcr.io/$PROJECT_ID/easyrent:latest'
 
-  # This step stops the EasyRent pod
+  # This step stops the easyrent pod
   - name: 'gcr.io/cloud-builders/kubectl'
     id: Stop Pod
     args:
       - 'scale'
       - 'deploy'
-      - 'EasyRent'
+      - 'easyrent-prod'
       - '--replicas=0'
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
@@ -53,17 +53,17 @@ steps:
     args:
       - run
       - --filename=app.yaml
-      - --image=gcr.io/$PROJECT_ID/EasyRent:$SHORT_SHA
+      - --image=gcr.io/$PROJECT_ID/easyrent:$SHORT_SHA
       - --location=us-east1-b
       - --cluster=cluster-1
 
-  # This step scales up the EasyRent pod
+  # This step scales up the easyrent pod
   - name: 'gcr.io/cloud-builders/kubectl'
     id: Start Pod
     args:
       - 'scale'
       - 'deploy'
-      - 'EasyRent'
+      - 'easyrent-prod'
       - '--replicas=1'
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
