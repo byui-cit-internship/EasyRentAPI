@@ -1,41 +1,5 @@
 steps:
 
-  # This step builds the container image.
-  - name: 'gcr.io/cloud-builders/docker'
-    id: Build
-    args:
-      - 'build'
-      - '-t'
-      - 'gcr.io/$PROJECT_ID/easyrent:$SHORT_SHA'
-      - '.'
-
-  # This step pushes the image to Container Registry
-  # The PROJECT_ID and SHORT_SHA variables are automatically
-  # replaced by Cloud Build.
-  - name: 'gcr.io/cloud-builders/docker'
-    id: Push
-    args:
-      - 'push'
-      - 'gcr.io/$PROJECT_ID/easyrent:$SHORT_SHA'
-
-  # This step builds the container image.
-  - name: 'gcr.io/cloud-builders/docker'
-    id: Build-Latest
-    args:
-      - 'build'
-      - '-t'
-      - 'gcr.io/$PROJECT_ID/easyrent:latest'
-      - '.'
-
-  # This step pushes the image to Container Registry
-  # The PROJECT_ID and SHORT_SHA variables are automatically
-  # replaced by Cloud Build.
-  - name: 'gcr.io/cloud-builders/docker'
-    id: Push-Latest
-    args:
-      - 'push'
-      - 'gcr.io/$PROJECT_ID/easyrent:latest'
-
   # This step stops the easyrent pod
   - name: 'gcr.io/cloud-builders/kubectl'
     id: Stop Pod
@@ -53,7 +17,7 @@ steps:
     args:
       - run
       - --filename=app-test.yaml
-      - --image=gcr.io/$PROJECT_ID/easyrent:$SHORT_SHA
+      - --image=gcr.io/$PROJECT_ID/easyrent:$_SHORT_SHA
       - --location=us-east1-b
       - --cluster=cluster-1
 
