@@ -1,5 +1,6 @@
 package com.getsimplex.steptimer.service;
 
+
 /**
  * Created by sean on 8/10/2016 based on https://github.com/tipsy/spark-websocket/tree/master/src/main/java
  */
@@ -9,6 +10,7 @@ import com.getsimplex.steptimer.model.*;
 import com.getsimplex.steptimer.utils.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import spark.Filter;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -21,17 +23,24 @@ import static spark.Spark.*;
 public class WebAppRunner {
 
     public static void main(String[] args){
+        Spark.port(getHerokuAssignedPort());
+        staticFileLocation("/public");
+        after((Filter) (request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+            response.header("Access-Control-Allow-Methods", "GET");
+        });
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
         Long now = (System.currentTimeMillis());
         System.out.println("The current date is: "+ (now));
-
-        Spark.port(getHerokuAssignedPort());
-
+        System.out.println("The config is located here: "+System.getProperty("config"));
 
 
 
+
+
+    
 		//secure("/Applications/steptimerwebsocket/keystore.jks","password","/Applications/steptimerwebsocket/keystore.jks","password");
-        staticFileLocation("/public");
+
         //post("/sensorUpdates", (req, res)-> WebServiceHandler.routeDeviceRequest(req));
         //post("/generateHistoricalGraph", (req, res)->routePdfRequest(req, res));
         //get("/readPdf", (req, res)->routePdfRequest(req, res));
