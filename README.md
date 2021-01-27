@@ -1,9 +1,13 @@
-# stedi
+# EasyRent API
 
-These commands assume that redis and kafka are running locally on ports 6379 and 9092 respectively.
+Before starting this project, install redis, and kafka.
+
+Update the env.list file with the appropriate redis password, and ports.
+
+These commands assume that redis is running locally on port 6379 and 9092 respectively.
 
 To start this project, run the following commands:
 
-`docker build . -t stedi`
+`docker build . -t easyrent-api`
 
-`docker run --env-file ./env.list stedi`
+`docker run --env-file ./env.list easyrent-api`
