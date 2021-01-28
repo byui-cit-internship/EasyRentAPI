@@ -41,7 +41,7 @@ public class WebAppRunner {
     
 		//secure("/Applications/steptimerwebsocket/keystore.jks","password","/Applications/steptimerwebsocket/keystore.jks","password");
 
-        staticFileLocation("/public");
+
 
         //post("/sensorUpdates", (req, res)-> WebServiceHandler.routeDeviceRequest(req));
         //post("/generateHistoricalGraph", (req, res)->routePdfRequest(req, res));
@@ -72,7 +72,7 @@ public class WebAppRunner {
             }
             return newLocation;
         });
-        get("/customer/:customer", (req, res)-> {
+        get("/customer/:customer    ", (req, res)-> {
             try {
 //                userFilter(req, res);
             } catch (Exception e){
