@@ -15,7 +15,6 @@ import spark.Request;
 import spark.Response;
 import spark.Spark;
 
-import java.util.Date;
 import java.util.Optional;
 
 import static spark.Spark.*;
