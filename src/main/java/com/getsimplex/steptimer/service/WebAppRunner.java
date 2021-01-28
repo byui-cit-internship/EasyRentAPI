@@ -16,7 +16,6 @@ import spark.Request;
 import spark.Response;
 import spark.Spark;
 
-import java.util.Date;
 import java.util.Optional;
 
 import static spark.Spark.*;
@@ -78,7 +77,7 @@ public class WebAppRunner {
             res.type("application/json");
             return newLocation;
         });
-        get("/customer/:customer", (req, res)-> {
+        get("/customer/:customer    ", (req, res)-> {
             try {
 //                userFilter(req, res);
             } catch (Exception e){
