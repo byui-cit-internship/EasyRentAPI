@@ -6,6 +6,7 @@ package com.getsimplex.steptimer.service;
  */
 
 
+import akka.actor.dsl.Inbox;
 import com.getsimplex.steptimer.model.*;
 import com.getsimplex.steptimer.utils.*;
 import com.google.gson.Gson;
@@ -39,6 +40,8 @@ public class WebAppRunner {
 
     
 		//secure("/Applications/steptimerwebsocket/keystore.jks","password","/Applications/steptimerwebsocket/keystore.jks","password");
+
+        staticFileLocation("/public");
 
         //post("/sensorUpdates", (req, res)-> WebServiceHandler.routeDeviceRequest(req));
         //post("/generateHistoricalGraph", (req, res)->routePdfRequest(req, res));
@@ -78,6 +81,18 @@ public class WebAppRunner {
                 return null;
             }
             return FindCustomer.handleRequest(req);
+
+        });
+
+        get("/customer", (req, res)-> {
+            try {
+//                userFilter(req, res);
+            } catch (Exception e){
+                res.status(401);
+                System.out.println("*** Error Finding Customer: "+e.getMessage());
+                return null;
+            }
+            return GetAllCustomers.handleRequest(req);
 
         });
 
