@@ -42,13 +42,17 @@ public class WebAppRunner {
     
 		//secure("/Applications/steptimerwebsocket/keystore.jks","password","/Applications/steptimerwebsocket/keystore.jks","password");
 
-        staticFileLocation("/public");
-
         //post("/sensorUpdates", (req, res)-> WebServiceHandler.routeDeviceRequest(req));
         //post("/generateHistoricalGraph", (req, res)->routePdfRequest(req, res));
         //get("/readPdf", (req, res)->routePdfRequest(req, res));
-        post("/user", (req, res)-> callUserDatabase(req));
-        post("/reservations",((request, response) -> CreateReservation.handleRequest(request)));
+        post("/user", (req, res)-> {
+            res.type("application/json");
+            return callUserDatabase(req);
+        });
+        post("/reservations",((request, response) -> {
+            response.type("application/json");
+            return CreateReservation.handleRequest(request);
+        }));
 
 
 
@@ -58,7 +62,7 @@ public class WebAppRunner {
 //            } catch (Exception e){
 //                res.redirect("/");
 //            }
-
+            res.type("application/json");
             return null;
         });
         post("/customer", (req, res)-> {
@@ -71,6 +75,7 @@ public class WebAppRunner {
                 System.out.println("*** Error Creating Customer: "+e.getMessage());
                 newLocation="/";
             }
+            res.type("application/json");
             return newLocation;
         });
         get("/customer/:customer", (req, res)-> {
@@ -81,6 +86,7 @@ public class WebAppRunner {
                 System.out.println("*** Error Finding Customer: "+e.getMessage());
                 return null;
             }
+            res.type("application/json");
             return FindCustomer.handleRequest(req);
 
         });
@@ -93,6 +99,7 @@ public class WebAppRunner {
                 System.out.println("*** Error Finding Customer: "+e.getMessage());
                 return null;
             }
+            res.type("application/json");
             return GetAllCustomers.handleRequest(req);
 
         });
@@ -105,6 +112,7 @@ public class WebAppRunner {
                 System.out.println("*** Error Finding Reservation : "+e.getMessage());
                 return null;
             }
+            res.type("application/json");
             return FindReservation.handleRequest(req);
 
         });
@@ -116,10 +124,14 @@ public class WebAppRunner {
                 System.out.println("*** Error Finding Reservation : "+e.getMessage());
                 return null;
             }
+            res.type("application/json");
             return FindReservation.handleRequest(req);
 
         });
-        post("/login", (req, res)->loginUser(req));
+        post("/login", (req, res)->{
+            res.type("application/json");
+            return loginUser(req);
+        });
         post("/rapidsteptest", (req, res)->{
             try{
 //                userFilter(req, res);
@@ -127,7 +139,7 @@ public class WebAppRunner {
                 res.status(401);
             }
 
-
+            res.type("application/json");
             return "Saved";
         });
         get("/riskscore/:customer",((req,res) -> {
@@ -138,7 +150,7 @@ public class WebAppRunner {
                 System.out.println("*** Error Finding Risk Score: "+e.getMessage());
                 throw e;
             }
-
+            res.type("application/json");
             return null;
         }));
         //post ("/sensorTail",(req,res) -> saveTail(req,res) );
