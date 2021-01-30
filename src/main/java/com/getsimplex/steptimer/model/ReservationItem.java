@@ -14,14 +14,6 @@ public class ReservationItem {
         this.returned = returned; 
     }
 
-    public Boolean getReturned() {
-        return returned;
-    }
-
-    public void setReturned(Boolean returned) {
-        this.returned = returned;
-    }
-
     public String getDescription    () {
         return description;
     }
