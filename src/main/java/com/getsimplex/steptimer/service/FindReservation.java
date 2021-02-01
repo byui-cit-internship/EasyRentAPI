@@ -25,8 +25,6 @@ public class FindReservation {
         String reservationId = request.params(":reservationId");
         String dueDateGreaterThanString = request.queryParams(":dueDateGreaterThan");
         String dueDateLessThanString = request.queryParams(":dueDateLessThan");
-        Long dueDateGreaterThan = Long.valueOf((dueDateGreaterThanString));
-        Long dueDateLessThan = Long.valueOf((dueDateLessThanString));
 
         if (reservationId != null && !reservationId.isEmpty()) {
             Optional<Reservation> matchingReservation = findReservationByReservationId(reservationId);
@@ -36,7 +34,9 @@ public class FindReservation {
             } else {
                 return null;
             }
-        } else if (dueDateGreaterThan != null && dueDateGreaterThan > 0 && dueDateLessThan != null && dueDateLessThan > 0) {
+        } else if (dueDateGreaterThanString != null && dueDateLessThanString != null ) {
+            Long dueDateGreaterThan = Long.valueOf((dueDateGreaterThanString));
+            Long dueDateLessThan = Long.valueOf((dueDateLessThanString));
             Optional<Reservation> matchingReservation = findReservationByDueDate(dueDateGreaterThan, dueDateLessThan);
 
             if (matchingReservation.isPresent()) {
