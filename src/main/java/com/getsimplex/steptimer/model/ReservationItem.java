@@ -5,10 +5,11 @@ public class ReservationItem {
     private Integer itemId;
     private Boolean returned;
 
-
-    public Boolean getReturned() { return returned; }
-
     public void setReturned(Boolean returned) { this.returned = returned; }
+
+    public Boolean getReturned() { 
+        return returned; 
+    }
 
     public String getDescription    () {
         return description;
