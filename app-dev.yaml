@@ -16,18 +16,18 @@ spec:
         - name: easyrent-dev
           image: gcr.io/constellation-275522/easyrent
           env:
-            - name: REDIS_PASSWORD_DEV
+            - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: redis
                   key: password
-            - name: REDIS_HOST_DEV
+            - name: REDIS_HOST
               value: "redis-12921.c114.us-east-1-4.ec2.cloud.redislabs.com"
-            - name: REDIS_PORT_DEV
+            - name: REDIS_PORT
               value: "12921"
-            - name: REDIS_DB_DEV
+            - name: REDIS_DB
               value: "0"
-            - name: KAFKA_BROKER_DEV
+            - name: KAFKA_BROKER
               value: "localhost:9092"
           ports:
             - containerPort: 4567
