@@ -23,8 +23,8 @@ public class FindReservation {
 
     public static String handleRequest(Request request) throws Exception {
         String reservationId = request.params(":reservationId");
-        String dueDateGreaterThanString = request.queryParams(":dueDateGreaterThan");
-        String dueDateLessThanString = request.queryParams(":dueDateLessThan");
+        String dueDateGreaterThanString = request.queryParams("dueDateGreaterThan");
+        String dueDateLessThanString = request.queryParams("dueDateLessThan");
 
         if (reservationId != null && !reservationId.isEmpty()) {
             Optional<Reservation> matchingReservation = findReservationByReservationId(reservationId);
