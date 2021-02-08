@@ -1,5 +1,6 @@
 *.idea
 *.iml
-/target/
+target
 /build/
 /.gradle/
+node_modules
