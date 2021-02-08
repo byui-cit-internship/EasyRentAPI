@@ -9,6 +9,16 @@ public class Reservation {
     private ArrayList<ReservationItem> reservationItems = new ArrayList<>();
     private Long dueDate;
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    private String customerName;
+
     public Long getDueDate() { return dueDate; }
 
     public void setDueDate(Long dueDate) { this.dueDate = dueDate; }
