@@ -73,6 +73,8 @@ public class WebAppRunner {
             } catch (Exception e){
                 System.out.println("*** Error Creating Customer: "+e.getMessage());
                 newLocation="/";
+                res.status(500);
+                res.body(e.getMessage());
             }
             res.type("application/json");
             return newLocation;
