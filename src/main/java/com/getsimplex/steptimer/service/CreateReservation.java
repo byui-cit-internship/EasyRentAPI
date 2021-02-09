@@ -29,7 +29,11 @@ public class CreateReservation {
     public static String createReservation(Reservation newReservation) throws Exception{
 
         if (newReservation != null && newReservation.getReservationId() != null && newReservation.getReservationItems() != null && !newReservation.getReservationItems().isEmpty() && newReservation.getCustomerId() != null) {
-            //SAVE USER TO REDIS
+           Optional customerOptional = FindCustomer.findCustomer(newReservation.getCustomerId());
+           if (!customerOptional.isPresent()){
+               throw new Exception("Invalid Customer " + gson.toJson(newReservation));
+           }
+           //SAVE USER TO REDIS
             JedisData.loadToJedis(newReservation, Reservation.class);
         }else{
             throw new Exception("Invalid Request " + gson.toJson(newReservation));

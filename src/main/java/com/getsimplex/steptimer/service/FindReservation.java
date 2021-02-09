@@ -68,7 +68,7 @@ public class FindReservation {
         for (Reservation reservation: reservations) {
             Predicate<Customer> findExistingCustomerPredicate = customer -> customer.getEmail().equals(reservation.getCustomerId());
             Optional<Customer> matchingCustomer = customers.stream().filter(findExistingCustomerPredicate).findAny();
-            reservation.setCustomerName(matchingCustomer.get().getCustomerName()) ;
+            reservation.setCustomerName(matchingCustomer.get().getCustomerName());
         }
         return reservations;
     }
