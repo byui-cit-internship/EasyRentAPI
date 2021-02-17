@@ -2,6 +2,7 @@ package com.getsimplex.steptimer.service;
 
 import com.getsimplex.steptimer.model.Customer;
 import com.getsimplex.steptimer.model.Reservation;
+import com.getsimplex.steptimer.model.ReservationItem;
 import com.getsimplex.steptimer.utils.JedisClient;
 import com.getsimplex.steptimer.utils.JedisData;
 import com.google.gson.Gson;
@@ -31,7 +32,16 @@ public class CreateReservation {
         if (newReservation != null && newReservation.getReservationId() != null && newReservation.getReservationItems() != null && !newReservation.getReservationItems().isEmpty() && newReservation.getCustomerId() != null) {
            Optional customerOptional = FindCustomer.findCustomer(newReservation.getCustomerId());
            if (!customerOptional.isPresent()){
-               throw new Exception("Invalid Customer " + gson.toJson(newReservation));
+               throw new Exception("Invalid Reservation " + gson.toJson(newReservation));
+           }
+           if (newReservation.getReservationItems().stream().anyMatch(reservationItem -> reservationItem.getItemId()==null)){
+               throw new Exception ("All reservation items must have an itemId");
+           }
+
+           int uniqueItemId = 0;
+
+           for (ReservationItem item: newReservation.getReservationItems()){
+               item.setUniqueItemId(uniqueItemId++);
            }
            //SAVE USER TO REDIS
             JedisData.loadToJedis(newReservation, Reservation.class);

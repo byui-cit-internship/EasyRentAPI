@@ -3,6 +3,7 @@ package com.getsimplex.steptimer.model;
 public class ReservationItem {
     private String description;
     private Integer itemId;
+    private Integer uniqueItemId;
     private Boolean returned;
 
     public void setReturned(Boolean returned) { this.returned = returned; }
@@ -25,5 +26,13 @@ public class ReservationItem {
 
     public void setItemId(Integer itemId) {
         this.itemId = itemId;
+    }
+
+    public Integer getUniqueItemId() {
+        return uniqueItemId;
+    }
+
+    public void setUniqueItemId(Integer uniqueItemId) {
+        this.uniqueItemId = uniqueItemId;
     }
 }
