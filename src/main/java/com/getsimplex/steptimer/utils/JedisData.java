@@ -17,19 +17,6 @@ import java.util.logging.Logger;
 public class JedisData {
    private static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
 
-    private static <T> void loadAndLog(List<T> list, Class clazz) throws Exception{
-        Logger infoLogger = Logger.getLogger(JedisData.class.getName());
-        Long loadCount = loadToJedis(list, clazz);
-        Integer attempted=0;
-        if (list!=null && !list.isEmpty()){
-            attempted=list.size();
-        }
-        infoLogger.log(Level.INFO, "Exported: "+loadCount+" "+clazz.getSimpleName()+" records out of: "+attempted+" attempted.");
-
-
-    }
-
-
 
 
     public static synchronized <T> ArrayList<T> getEntityList(Class clazz) throws Exception{
@@ -42,22 +29,23 @@ public class JedisData {
         return arrayList;
     }
 
-    public static <T> Long loadToJedis(List<T> list, String keyName) throws Exception{
-        for (T object:list){
-            String jsonFormatted = gson.toJson(object,object.getClass());
-            JedisClient.zadd(keyName, 0, jsonFormatted);
+    public static synchronized <T> ArrayList<T> getEntities(Class clazz) throws Exception{
+        Set<String> set = JedisClient.zrange(clazz.getSimpleName(), 0, -1);
+        ArrayList<T> arrayList = new ArrayList<T>();
+
+        // loop through all the keys from the sorted set and for each key get the value from the redis map
+        for (String key:set){
+            Optional<String> mapValueOptional = JedisClient.hmget(clazz.getSimpleName()+"Map", key);
+            if (mapValueOptional.isEmpty()){
+                throw new Exception("Map "+clazz.getSimpleName()+" and Key: "+key+" is empty: should contain a JSON object.");
+            } else{
+                arrayList.add((T) gson.fromJson(mapValueOptional.get(), clazz));
+            }
         }
 
-        Long loadCount = JedisClient.zcount(keyName,0d,-1);
-
-        if (loadCount > list.size()){
-            JedisClient.zremrangeByScore(keyName, 0, -1);
-            throw new Exception("Attempt to load "+list.size()+" elements to key "+keyName+" failed by creating duplicates, reverting to empty list instead");
-        }
-
-        return loadCount;
-
+        return arrayList;
     }
+
 
     public static <T> void set(T object, String keyName) throws Exception{
         String jsonFormatted = gson.toJson(object, object.getClass());
@@ -71,26 +59,31 @@ public class JedisData {
     }
 
 
-    public static <T> void loadToJedis(T record, Class clazz) throws Exception{
-        List<T> listOfOne = new ArrayList<T>();
-        listOfOne.add(record);
-        loadToJedis(listOfOne, clazz);
-    }
+    public static <T> void loadToJedis(T record) throws Exception{
 
-    public static<T> Long loadToJedis(List<T> list, Class clazz) throws Exception{
-        Long loadCount = 0l;
-        if (list!=null && !list.isEmpty()) {
             try {
-                loadCount=loadToJedis(list, clazz.getSimpleName());
+                String jsonFormatted = gson.toJson(record,record.getClass());
+                JedisClient.zadd(record.getClass().getSimpleName(), 0, jsonFormatted);
             } catch (Exception e) {
-                Thread.sleep(10000);//sleep 10 seconds and try again in case of network failure
-                loadCount=loadToJedis(list, clazz.getSimpleName());
 
                 throw (e);
             }
-        }
-        return loadCount;
+
     }
+
+    public static <T> void loadToJedis(T record, String id) throws Exception{
+
+        try {
+            String jsonFormatted = gson.toJson(record,record.getClass());
+            JedisClient.hmset(record.getClass().getSimpleName()+"Map", id, jsonFormatted);
+            JedisClient.zadd(record.getClass().getSimpleName(), 0, id);
+        } catch (Exception e) {
+
+            throw (e);
+        }
+
+    }
+
 
     public static <T> Long deleteFromRedis(List<T> list) throws Exception{
         Long deleteCount = 0l;

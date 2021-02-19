@@ -4,6 +4,9 @@ package com.getsimplex.steptimer.utils;
 import com.typesafe.config.Config;
 import redis.clients.jedis.Jedis;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -56,7 +59,7 @@ public class JedisClient {
 
     }
 
-    public static synchronized Jedis getJedis(){
+    private static synchronized Jedis getJedis(){
 
         try{
             jedis.ping();
@@ -216,8 +219,20 @@ public class JedisClient {
         }
     }
 
-    public void disconnect(){
-        jedis.disconnect();
+    public static void hmset (String mapName, String key, String json){
+        jedis.hmset(mapName, Map.of(key, json));
     }
+
+    public static Optional<String> hmget (String mapName, String key) throws Exception{
+        List<String> valueList = jedis.hmget(mapName, key);
+        Optional<String> valueOptional = Optional.empty();
+        if (valueList.size()==1){
+            valueOptional = Optional.of(valueList.get(0));
+        } else if (valueList.size()>1){
+            throw new Exception("Map: "+mapName+" and Key: "+key+" returned "+valueList.size()+" values: should only return one or zero.");
+        }
+        return valueOptional;
+    }
+
 
 }
