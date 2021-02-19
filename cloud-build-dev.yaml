@@ -68,3 +68,15 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
       - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
+
+  # This step scales up the EasyRent pod
+  - name: 'gcr.io/constellation-275522/easyrenttest-team6'
+    id: Run API Tests
+    entrypoint: npm
+    args:
+      - 'run'
+      - 'test-dev'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'      
+      
