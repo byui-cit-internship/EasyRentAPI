@@ -47,6 +47,10 @@ public class JedisData {
     }
 
 
+    public static synchronized <T> void update(T object, String key){
+        JedisClient.hmset(object.getClass().getSimpleName()+"Map", key, gson.toJson(object));
+    }
+
     public static <T> void set(T object, String keyName) throws Exception{
         String jsonFormatted = gson.toJson(object, object.getClass());
         JedisClient.set(keyName, jsonFormatted);
