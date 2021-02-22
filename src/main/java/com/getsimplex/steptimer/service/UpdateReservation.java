@@ -29,8 +29,13 @@ public class UpdateReservation {
         updateReservation(updated);
     }
 
-    private static void updateReservation(Reservation updated){
-        JedisData.update(updated, updated.getReservationId());
+    private static void updateReservation(Reservation updated) throws Exception{
+        if (updated != null && updated.getReservationId() != null && updated.getReservationItems() != null && !updated.getReservationItems().isEmpty() && updated.getCustomerId() != null)
+        {
+            JedisData.update(updated, updated.getReservationId());
+        }
+            throw new Exception ("Invalid JSON (customerId, reservationId, and reservationItems are required fields: "+gson.toJson(updated));
+        }
     }
 
 }
