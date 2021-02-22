@@ -53,6 +53,16 @@ public class WebAppRunner {
             return CreateReservation.handleRequest(request);
         }));
 
+        put("/reservations",((request, response) ->{
+            try {
+                response.type("application/json");
+                UpdateReservation.handleRequest(request);
+            } catch (Exception e){
+                response.status(500);
+                response.body(e.getMessage());
+            }
+            return "Ok";
+        }));
 
 
         get ("/stephistory/:customer", (req, res)-> {

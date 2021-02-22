@@ -63,7 +63,7 @@ public class FindReservation {
     }
 
     public static List<Reservation> getAllReservations() throws Exception{
-        List<Reservation> reservations = JedisData.getEntityList(Reservation.class);
+        List<Reservation> reservations = JedisData.getEntities(Reservation.class);
         List<Customer> customers = GetAllCustomers.getCustomers();
         for (Reservation reservation: reservations) {
             Predicate<Customer> findExistingCustomerPredicate = customer -> customer.getEmail().equals(reservation.getCustomerId());
