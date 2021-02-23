@@ -30,11 +30,11 @@ public class UpdateReservation {
     }
 
     private static void updateReservation(Reservation updated) throws Exception{
-        if (updated != null && updated.getReservationId() != null && updated.getReservationItems() != null && !updated.getReservationItems().isEmpty() && updated.getCustomerId() != null)
+        if (updated != null && updated.getReservationId() != null && updated.getReservationItems() != null && !updated.getReservationItems().isEmpty() && updated.getCustomerId() != null && !updated.getReservationItems().stream().anyMatch(reservationItem->reservationItem.getUniqueItemId()==null))
         {
             JedisData.update(updated, updated.getReservationId());
         } else {
-            throw new Exception ("Invalid JSON (customerId, reservationId, and reservationItems are required fields: "+gson.toJson(updated));
+            throw new Exception ("Invalid JSON (customerId, reservationId, and reservationItems WITH uniqueItemId are required fields: "+gson.toJson(updated));
         }
     }
 
