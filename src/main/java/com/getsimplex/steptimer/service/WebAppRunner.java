@@ -27,7 +27,9 @@ public class WebAppRunner {
         staticFileLocation("/public");
         after((Filter) (request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
-            response.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, PATCH");
+            response.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, PATCH, OPTIONS");
+            response.header("Access-Control-Allow-Headers", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
+            response.header("Access-Control-Allow-Credentials", "true");
         });
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
         Long now = (System.currentTimeMillis());
