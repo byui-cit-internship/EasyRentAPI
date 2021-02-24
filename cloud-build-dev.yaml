@@ -69,14 +69,20 @@ steps:
       - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
       - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
 
-  # This step scales up the EasyRent pod
-  - name: 'gcr.io/constellation-275522/easyrenttest-team6'
+  # This step runs automated integration tests
+  - name: 'gcr.io/cloud-builders/docker'
     id: Run API Tests
-    args:
-      - 'npm'
-      - 'run'
-      - 'test-dev'
+    args: ['run','--entrypoint','npm','gcr.io/constellation-275522/easyrenttest-team6:latest','run','test-dev']
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'      
-      
+      - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: Deploy Test Environment
+    args:
+      - 'beta'
+      - 'builds'
+      - 'triggers'
+      - 'run'
+      - '41336c5b-0cf2-45e6-82c0-1ad87f924a10'
+      - '--branch=main'
