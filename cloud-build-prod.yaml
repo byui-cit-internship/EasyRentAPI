@@ -32,3 +32,12 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
       - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
+      -
+
+  # This step runs automated integration tests
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Run API Tests
+    args: ['run','--entrypoint','npm','gcr.io/constellation-275522/easyrenttest-team6:latest','run','test-prod']
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
