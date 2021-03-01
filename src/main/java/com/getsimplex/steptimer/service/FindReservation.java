@@ -56,10 +56,7 @@ public class FindReservation {
     }
 
     public static Optional<Reservation> findReservationByReservationId(String reservationId) throws Exception {
-        List<Reservation> reservations = getAllReservations();
-        Predicate<Reservation> findExistingReservationPredicate = reservation -> reservation.getReservationId().equals(reservationId);
-        Optional<Reservation> matchingReservation = reservations.stream().filter(findExistingReservationPredicate).findAny();
-        return matchingReservation;
+        return JedisData.getEntity(Reservation.class, reservationId);
     }
 
     public static List<Reservation> getAllReservations() throws Exception{

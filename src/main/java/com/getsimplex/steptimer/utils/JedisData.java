@@ -29,6 +29,17 @@ public class JedisData {
         return arrayList;
     }
 
+    public static synchronized <T> Optional<T> getEntity(Class clazz, String key) throws Exception{
+        Optional<String> mapValueOptional = JedisClient.hmget(clazz.getSimpleName()+"Map", key);
+        Optional<T> optionalValue = Optional.empty();
+
+        if (mapValueOptional.isPresent()){
+            optionalValue = Optional.of((T) gson.fromJson(mapValueOptional.get(), clazz));
+        }
+
+        return optionalValue;
+    }
+
     public static synchronized <T> ArrayList<T> getEntities(Class clazz) throws Exception{
         Set<String> set = JedisClient.zrange(clazz.getSimpleName(), 0, -1);
         ArrayList<T> arrayList = new ArrayList<T>();
