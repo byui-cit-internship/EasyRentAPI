@@ -116,7 +116,9 @@ public class JedisClient {
         Jedis jedis = jedisPool.getResource();
         try {
             tries ++;
-            return jedis.zrange(key,start,end);
+            Set<String> results = jedis.zrange(key,start,end);
+            jedisPool.returnResource(jedis);
+            return results;
         }
 
         catch (Exception e){
