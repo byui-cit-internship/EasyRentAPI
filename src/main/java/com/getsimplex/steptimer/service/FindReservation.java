@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import spark.Request;
 
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -35,24 +36,39 @@ public class FindReservation {
             } else {
                 return null;
             }
-        } else if (dueDateGreaterThanString != null && dueDateLessThanString != null ) {
-            Long dueDateGreaterThan = Long.valueOf((dueDateGreaterThanString));
-            Long dueDateLessThan = Long.valueOf((dueDateLessThanString));
-            Optional<Reservation> matchingReservation = findReservationByDueDate(dueDateGreaterThan, dueDateLessThan);
 
-            if (matchingReservation.isPresent()) {
-                return gson.toJson(matchingReservation.get());
-            } else {
-                return null;
+        // this used to require both parameters startingDate and EndingDate
+        // BUT we realized it is easier to pass only one date from the UI
+        // so if they pass a greaterthan date, we assume we want everything greater than that date
+        // if they pass a lessthan date, we assume we want everything less than that date
+        } else if (dueDateGreaterThanString != null || dueDateLessThanString != null ) {
+            Date oneYearInFuture = new Date();
+            oneYearInFuture = new Date(oneYearInFuture.getTime()+365*24*60*60*1000);
+            Long dueDateLessThan = oneYearInFuture.getTime();
+
+            Date oneYearInPast = new Date();
+            oneYearInPast = new Date(Long.valueOf(oneYearInPast.getTime()-365*24*60*60*1000));
+            Long dueDateGreaterThan = oneYearInPast.getTime();
+
+            if (!dueDateGreaterThanString.isEmpty() && dueDateGreaterThanString!=null){
+
+                dueDateGreaterThan = Long.valueOf((dueDateGreaterThanString));
             }
+
+            if (!dueDateLessThanString.isEmpty() && dueDateLessThanString!=null){
+                dueDateLessThan = Long.valueOf((dueDateLessThanString));
+            }
+
+            List<Reservation> matchingReservations = findReservationByDueDate(dueDateGreaterThan, dueDateLessThan);
+            return gson.toJson(matchingReservations);
+
         } else return gson.toJson(getAllReservations());
     }
 
-    private static Optional<Reservation> findReservationByDueDate(Long dueDateGreaterThan, Long dueDateLessThan) throws Exception {
-        List<Reservation> reservations = JedisData.getEntityList(Reservation.class);
-        Predicate<Reservation> findExistingReservationPredicate = reservation -> reservation.getDueDate() > dueDateGreaterThan && reservation.getDueDate() < dueDateLessThan;
-        Optional<Reservation> matchingReservation   = reservations.stream().filter(findExistingReservationPredicate).findAny();
-        return matchingReservation;
+    private static List<Reservation> findReservationByDueDate(Long dueDateGreaterThan, Long dueDateLessThan) throws Exception {
+
+        List<Reservation> reservations = JedisData.getEntities(Reservation.class, dueDateGreaterThan, dueDateLessThan);
+        return reservations;
     }
 
     public static Optional<Reservation> findReservationByReservationId(String reservationId) throws Exception {

@@ -44,7 +44,7 @@ public class CreateReservation {
                item.setUniqueItemId(uniqueItemId++);
            }
            //SAVE USER TO REDIS
-            JedisData.loadToJedis(newReservation, newReservation.getReservationId());
+            JedisData.loadToJedis(newReservation, newReservation.getReservationId(),newReservation.getDueDate());
         }else{
             throw new Exception("Invalid Request " + gson.toJson(newReservation));
         }

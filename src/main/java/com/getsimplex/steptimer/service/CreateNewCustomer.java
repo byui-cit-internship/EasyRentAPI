@@ -37,7 +37,7 @@ public class CreateNewCustomer {
 
         if (newCustomer != null && !newCustomer.getCustomerName().isEmpty() && newCustomer.getEmail().contains("@") && newCustomer.getEmail().contains("."))  {
             //SAVE USER TO REDIS
-            JedisData.loadToJedis(newCustomer);
+            JedisData.loadToJedis(newCustomer, newCustomer.getEmail());
         } else {
             throw new Exception("Invalid Customer Name or Customer Email");
         }

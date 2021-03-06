@@ -20,13 +20,7 @@ public class JedisData {
 
 
     public static synchronized <T> ArrayList<T> getEntityList(Class clazz) throws Exception{
-        Set<String> set = JedisClient.zrange(clazz.getSimpleName(), 0, -1);
-        ArrayList<T> arrayList = new ArrayList<T>();
-        for (String string:set){
-            arrayList.add((T) gson.fromJson(string, clazz));
-        }
-
-        return arrayList;
+        return getEntities(clazz);
     }
 
     public static synchronized <T> Optional<T> getEntity(Class clazz, String key) throws Exception{
@@ -38,6 +32,23 @@ public class JedisData {
         }
 
         return optionalValue;
+    }
+
+    public static synchronized <T> ArrayList<T> getEntities(Class clazz, long beginScore, long endScore) throws Exception{
+        Set<String> set = JedisClient.zrangeByScore(clazz.getSimpleName(), beginScore, endScore);
+        ArrayList<T> arrayList = new ArrayList<T>();
+
+        // loop through all the keys from the sorted set and for each key get the value from the redis map
+        for (String key:set){
+            Optional<String> mapValueOptional = JedisClient.hmget(clazz.getSimpleName()+"Map", key);
+            if (mapValueOptional.isEmpty()){
+                throw new Exception("Map "+clazz.getSimpleName()+" and Key: "+key+" is empty: should contain a JSON object.");
+            } else{
+                arrayList.add((T) gson.fromJson(mapValueOptional.get(), clazz));
+            }
+        }
+
+        return arrayList;
     }
 
     public static synchronized <T> ArrayList<T> getEntities(Class clazz) throws Exception{
@@ -57,7 +68,6 @@ public class JedisData {
         return arrayList;
     }
 
-
     public static synchronized <T> void update(T object, String key){
         JedisClient.hmset(object.getClass().getSimpleName()+"Map", key, gson.toJson(object));
     }
@@ -74,24 +84,23 @@ public class JedisData {
     }
 
 
-    public static <T> void loadToJedis(T record) throws Exception{
+    public static <T> void loadToJedis(T record, String id) throws Exception{
 
-            try {
-                String jsonFormatted = gson.toJson(record,record.getClass());
-                JedisClient.zadd(record.getClass().getSimpleName(), 0, jsonFormatted);
-            } catch (Exception e) {
+        try {
+            loadToJedis(record, id, 0);
+        } catch (Exception e) {
 
-                throw (e);
-            }
+            throw (e);
+        }
 
     }
 
-    public static <T> void loadToJedis(T record, String id) throws Exception{
+    public static <T> void loadToJedis(T record, String id, long score) throws Exception{
 
         try {
             String jsonFormatted = gson.toJson(record,record.getClass());
             JedisClient.hmset(record.getClass().getSimpleName()+"Map", id, jsonFormatted);
-            JedisClient.zadd(record.getClass().getSimpleName(), 0, id);
+            JedisClient.zadd(record.getClass().getSimpleName(), score, id);
         } catch (Exception e) {
 
             throw (e);

@@ -5,6 +5,15 @@ public class ReservationItem {
     private Integer itemId;
     private Integer uniqueItemId;
     private Boolean returned;
+    private Boolean recorded;
+
+    public Boolean getRecorded() {
+        return recorded;
+    }
+
+    public void setRecorded(Boolean recorded) {
+        this.recorded = recorded;
+    }
 
     public void setReturned(Boolean returned) { this.returned = returned; }
 

@@ -95,19 +95,18 @@ public class WebAppRunner {
             return null;
         });
         post("/customer", (req, res)-> {
-            String newLocation;
+
             try {
 //                userFilter(req, res);
                 createNewCustomer(req, res);
-                newLocation="/timer.html";
+
             } catch (Exception e){
                 System.out.println("*** Error Creating Customer: "+e.getMessage());
-                newLocation="/";
                 res.status(500);
                 res.body(e.getMessage());
             }
             res.type("application/json");
-            return newLocation;
+            return null;
         });
         get("/customer/:customer    ", (req, res)-> {
             try {

@@ -111,7 +111,7 @@ public class JedisClient {
 //        }
 //    }
 
-    public static synchronized Set<String> zrange(String key, int start, int end) throws Exception{
+    public static synchronized Set<String> zrange(String key, long start, long end) throws Exception{
         int tries =0;
         Jedis jedis = jedisPool.getResource();
         try {
@@ -136,7 +136,32 @@ public class JedisClient {
         }
     }
 
-    public static synchronized void zadd(String key, int score, String value) throws Exception{
+    public static synchronized Set<String> zrangeByScore (String key, long start, long end) throws Exception{
+        int tries =0;
+        Jedis jedis = jedisPool.getResource();
+        try {
+            tries ++;
+            Set<String> results = jedis.zrangeByScore(key,start,end);
+            jedisPool.returnResource(jedis);
+            return results;
+        }
+
+        catch (Exception e){
+            jedisPool.returnBrokenResource(jedis);
+            if (tries<1000)
+            {
+                jedis = jedisPool.getResource();
+                Set<String> result = zrange(key,start,end);
+                jedisPool.returnResource(jedis);
+                return result;
+            }
+            else{
+                throw new Exception("Tried 1000 times to get range:"+key+" start:"+start+" end:"+end+" without success");
+            }
+        }
+    }
+
+    public static synchronized void zadd(String key, long score, String value) throws Exception{
         int tries =0;
         Jedis jedis = jedisPool.getResource();
         try {
