@@ -12,8 +12,9 @@ steps:
       - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
       - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
 
-      # This step deploys the application in Kubernetes
+  # This step deploys the application in Kubernetes
   - name: 'gcr.io/cloud-builders/gke-deploy'
+    id: Deploy to Production Pods
     args:
       - run
       - --filename=app-prod.yaml
