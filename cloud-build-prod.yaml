@@ -16,11 +16,11 @@ steps:
   - name: 'gcr.io/cloud-builders/gke-deploy'
     id: Deploy to Production Pods
     args:
-      - run
-      - --filename=app-prod.yaml
-      - --image=gcr.io/$PROJECT_ID/easyrent:$_SHORT_SHA
-      - --location=us-east1-b
-      - --cluster=cluster-1
+      - 'run'
+      - '--filename=app-prod.yaml'
+      - '--image=gcr.io/$PROJECT_ID/easyrent:$_SHORT_SHA'
+      - '--location=us-east1-b'
+      - '--cluster=cluster-1'
 
   # This step scales up the easyrent pod
   - name: 'gcr.io/cloud-builders/kubectl'
