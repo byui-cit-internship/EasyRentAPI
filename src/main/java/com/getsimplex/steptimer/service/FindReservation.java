@@ -50,12 +50,12 @@ public class FindReservation {
             oneYearInPast = new Date(Long.valueOf(oneYearInPast.getTime()-365*24*60*60*1000));
             Long dueDateGreaterThan = oneYearInPast.getTime();
 
-            if (!dueDateGreaterThanString.isEmpty() && dueDateGreaterThanString!=null){
+            if (dueDateGreaterThanString != null && !dueDateGreaterThanString.isEmpty()){
 
                 dueDateGreaterThan = Long.valueOf((dueDateGreaterThanString));
             }
 
-            if (!dueDateLessThanString.isEmpty() && dueDateLessThanString!=null){
+            if (dueDateLessThanString!=null && !dueDateLessThanString.isEmpty()){
                 dueDateLessThan = Long.valueOf((dueDateLessThanString));
             }
 
