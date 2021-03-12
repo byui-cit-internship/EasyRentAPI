@@ -19,10 +19,10 @@ spec:
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: redis
-                  key: password
+                  name: env-secrets
+                  key: REDIS_PASS
             - name: REDIS_HOST
-              value: "redis-12921.c114.us-east-1-4.ec2.cloud.redislabs.com"
+              value: "team-6.default.svc.cluster.local"
             - name: REDIS_PORT
               value: "6379"
             - name: REDIS_DB
