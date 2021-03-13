@@ -22,7 +22,7 @@ spec:
                   name: env-secrets-dev
                   key: REDIS_PASS
             - name: REDIS_HOST
-              value: "easy-rent-dev-redis.svc.cluster.local"
+              value: "easy-rent-dev-redis.default.svc.cluster.local"
             - name: REDIS_PORT
               value: "6379"
             - name: REDIS_DB
