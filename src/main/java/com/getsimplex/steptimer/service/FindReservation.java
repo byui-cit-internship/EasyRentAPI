@@ -1,6 +1,7 @@
 package com.getsimplex.steptimer.service;
 
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.getsimplex.steptimer.model.Customer;
 import com.getsimplex.steptimer.model.Reservation;
 import com.getsimplex.steptimer.utils.JedisClient;
@@ -68,19 +69,26 @@ public class FindReservation {
     private static List<Reservation> findReservationByDueDate(Long dueDateGreaterThan, Long dueDateLessThan) throws Exception {
 
         List<Reservation> reservations = JedisData.getEntities(Reservation.class, dueDateGreaterThan, dueDateLessThan);
+        for (Reservation reservation: reservations) {
+            Optional<Customer> matchingCustomer = JedisData.getEntity(Customer.class, reservation.getCustomerId().toLowerCase());
+            reservation.setCustomerName(matchingCustomer.get().getCustomerName());
+        }
         return reservations;
     }
 
     public static Optional<Reservation> findReservationByReservationId(String reservationId) throws Exception {
-        return JedisData.getEntity(Reservation.class, reservationId);
+        Optional<Reservation> reservation = JedisData.getEntity(Reservation.class, reservationId);
+        if (reservation.isPresent()){
+            Optional<Customer> matchingCustomer = JedisData.getEntity(Customer.class, reservation.get().getCustomerId().toLowerCase());
+            reservation.get().setCustomerName(matchingCustomer.get().getCustomerName());
+        }
+        return reservation;
     }
 
     public static List<Reservation> getAllReservations() throws Exception{
         List<Reservation> reservations = JedisData.getEntities(Reservation.class);
-        List<Customer> customers = GetAllCustomers.getCustomers();
         for (Reservation reservation: reservations) {
-            Predicate<Customer> findExistingCustomerPredicate = customer -> customer.getEmail().equals(reservation.getCustomerId());
-            Optional<Customer> matchingCustomer = customers.stream().filter(findExistingCustomerPredicate).findAny();
+            Optional<Customer> matchingCustomer = JedisData.getEntity(Customer.class, reservation.getCustomerId().toLowerCase());
             reservation.setCustomerName(matchingCustomer.get().getCustomerName());
         }
         return reservations;
