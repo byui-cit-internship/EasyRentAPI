@@ -25,6 +25,7 @@ public class LoginController {
 
     public static String handleRequest(Request request) throws Exception{
         String loginRequestString = request.body();
+        System.out.println("Login Request String: "+loginRequestString);
         LoginRequest loginRequest = gson.fromJson(loginRequestString, LoginRequest.class);
         return tryLogin(loginRequest.getUserName(), loginRequest.getPassword());
 
