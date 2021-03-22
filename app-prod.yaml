@@ -94,12 +94,12 @@ spec:
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: team6-autoscaler
+  name: easyrent-api-prod-autoscaler
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: team6-autoscaler
+    name: easyrent-api-prod-autoscaler
   minReplicas: 1
   maxReplicas: 10
   metrics:
