@@ -19,11 +19,11 @@ public class JedisData {
 
 
 
-    public static synchronized <T> ArrayList<T> getEntityList(Class clazz) throws Exception{
+    public static <T> ArrayList<T> getEntityList(Class clazz) throws Exception{
         return getEntities(clazz);
     }
 
-    public static synchronized <T> Optional<T> getEntity(Class clazz, String key) throws Exception{
+    public static <T> Optional<T> getEntity(Class clazz, String key) throws Exception{
         Optional<String> mapValueOptional = JedisClient.hmget(clazz.getSimpleName()+"Map", key);
         Optional<T> optionalValue = Optional.empty();
 
@@ -34,7 +34,7 @@ public class JedisData {
         return optionalValue;
     }
 
-    public static synchronized <T> ArrayList<T> getEntities(Class clazz, long beginScore, long endScore) throws Exception{
+    public static <T> ArrayList<T> getEntities(Class clazz, long beginScore, long endScore) throws Exception{
         Set<String> set = JedisClient.zrangeByScore(clazz.getSimpleName(), beginScore, endScore);
         ArrayList<T> arrayList = new ArrayList<T>();
 
@@ -51,7 +51,7 @@ public class JedisData {
         return arrayList;
     }
 
-    public static synchronized <T> ArrayList<T> getEntities(Class clazz) throws Exception{
+    public static <T> ArrayList<T> getEntities(Class clazz) throws Exception{
         Set<String> set = JedisClient.zrange(clazz.getSimpleName(), 0, -1);
         ArrayList<T> arrayList = new ArrayList<T>();
 
@@ -68,7 +68,7 @@ public class JedisData {
         return arrayList;
     }
 
-    public static synchronized <T> void update(T object, String key){
+    public static <T> void update(T object, String key){
         JedisClient.hmset(object.getClass().getSimpleName()+"Map", key, gson.toJson(object));
     }
 
@@ -108,23 +108,13 @@ public class JedisData {
 
     }
 
-
-    public static <T> Long deleteFromRedis(List<T> list) throws Exception{
+    public static <T> Long deleteEntity(String entityType, String id) throws Exception{
         Long deleteCount = 0l;
-        int i = 0;
-//        public List<CorporateDivision> getCorporateDivisionByID(Integer divisionID){
-//            ArrayList<CorporateDivision> filteredDivisions = new ArrayList<>();
-        for (T lists: list){
-            if(deleteCount<list.size()){
-//            if(list.size()>0){
-               deleteFromRedis(list.get(i));
-                deleteCount++;
-                i++;
-            }
-        }
-
+        deleteCount+=JedisClient.zrem(entityType,id);
+        JedisClient.hdel(entityType+"Map", id);
         return deleteCount;
     }
+
 
     public static <T> Long deleteFromRedis (T record) throws Exception{
         String jsonFormatted = gson.toJson(record, record.getClass());

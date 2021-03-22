@@ -72,7 +72,7 @@ public class JedisClient {
 //        return jedis;
 //    }
 
-    public static synchronized void set(String key, String value) throws Exception{
+    public static void set(String key, String value) throws Exception{
         int tries =0;
         Jedis jedis = jedisPool.getResource();
         try{
@@ -111,7 +111,7 @@ public class JedisClient {
 //        }
 //    }
 
-    public static synchronized Set<String> zrange(String key, long start, long end) throws Exception{
+    public static Set<String> zrange(String key, long start, long end) throws Exception{
         int tries =0;
         Jedis jedis = jedisPool.getResource();
         try {
@@ -136,7 +136,7 @@ public class JedisClient {
         }
     }
 
-    public static synchronized Set<String> zrangeByScore (String key, long start, long end) throws Exception{
+    public static Set<String> zrangeByScore (String key, long start, long end) throws Exception{
         int tries =0;
         Jedis jedis = jedisPool.getResource();
         try {
@@ -161,7 +161,7 @@ public class JedisClient {
         }
     }
 
-    public static synchronized void zadd(String key, long score, String value) throws Exception{
+    public static void zadd(String key, long score, String value) throws Exception{
         int tries =0;
         Jedis jedis = jedisPool.getResource();
         try {
@@ -184,7 +184,7 @@ public class JedisClient {
         }
     }
 
-    public static synchronized long zrem(String key, String value) throws Exception{
+    public static long zrem(String key, String value) throws Exception{
         int tries =0;
         Jedis jedis = jedisPool.getResource();
         try {
@@ -209,7 +209,7 @@ public class JedisClient {
         }
     }
 
-    public static synchronized void zremrangeByScore(String key, double start, double end) throws Exception{
+    public static void zremrangeByScore(String key, double start, double end) throws Exception{
         int tries =0;
         Jedis jedis = jedisPool.getResource();
         try {
@@ -232,7 +232,7 @@ public class JedisClient {
         }
     }
 
-    public static synchronized Long zcount(String keyName, double min, double max) throws Exception{
+    public static Long zcount(String keyName, double min, double max) throws Exception{
         int tries =0;
         Jedis jedis = jedisPool.getResource();
         try {
@@ -258,7 +258,7 @@ public class JedisClient {
 
     }
 
-    public static synchronized String get(String key) throws Exception{
+    public static String get(String key) throws Exception{
         int tries = 0;
         Jedis jedis = jedisPool.getResource();
         try{
@@ -287,12 +287,18 @@ public class JedisClient {
         jedisPool.returnResource(jedis);
     }
 
+    public static void hdel (String mapName, String key){
+        Jedis jedis = jedisPool.getResource();
+        jedis.hdel(mapName, key);
+        jedisPool.returnResource(jedis);
+    }
+
     public static Optional<String> hmget (String mapName, String key) throws Exception{
         Jedis jedis = jedisPool.getResource();
         List<String> valueList = jedis.hmget(mapName, key);
         jedisPool.returnResource(jedis);
         Optional<String> valueOptional = Optional.empty();
-        if (valueList.size()==1){
+        if (valueList.size()==1 && valueList.get(0)!=null){
             valueOptional = Optional.of(valueList.get(0));
         } else if (valueList.size()>1){
             throw new Exception("Map: "+mapName+" and Key: "+key+" returned "+valueList.size()+" values: should only return one or zero.");

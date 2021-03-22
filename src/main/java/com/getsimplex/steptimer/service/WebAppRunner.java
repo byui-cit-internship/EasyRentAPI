@@ -106,7 +106,8 @@ public class WebAppRunner {
                 res.body(e.getMessage());
             }
             res.type("application/json");
-            return null;
+            res.status(204);
+            return "Ok";
         });
         get("/customer/:customer    ", (req, res)-> {
             try {
@@ -146,6 +147,19 @@ public class WebAppRunner {
             return FindReservation.handleRequest(req);
 
         });
+        delete("/reservations/:reservationId", (req, res)-> {
+            try {
+//                userFilter(req, res);
+            } catch (Exception e){
+                res.status(401);
+                System.out.println("*** Error Finding Reservation : "+e.getMessage());
+                return null;
+            }
+            res.type("application/json");
+            DeleteReservation.handleRequest(req, res);
+
+            return null;
+        });
         get("/reservations", (req, res)-> {
             try {
 //                userFilter(req, res);
@@ -161,6 +175,10 @@ public class WebAppRunner {
         post("/login", (req, res)->{
             res.type("application/json");
             return loginUser(req);
+        });
+
+        post("/token", (req, res) -> {
+           return TokenService.validateToken(req.body());
         });
         post("/rapidsteptest", (req, res)->{
             try{

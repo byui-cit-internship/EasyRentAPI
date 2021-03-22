@@ -27,9 +27,8 @@ public class CreateNewCustomer {
     }
 
     public static String createCustomer(Customer newCustomer) throws Exception{
-        List<Customer> customers = JedisData.getEntityList(Customer.class);
-        Predicate<Customer> findExistingCustomerPredicate = customer -> customer.getEmail().equals(newCustomer.getEmail());
-        Optional<Customer> matchingCustomer = customers.stream().filter(findExistingCustomerPredicate).findAny();
+        Optional<Customer> matchingCustomer = JedisData.getEntity(Customer.class, newCustomer.getEmail());
+
 
         if (matchingCustomer.isPresent()){
             throw new Exception("Customer already exists");

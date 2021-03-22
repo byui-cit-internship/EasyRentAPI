@@ -8,8 +8,6 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.getsimplex.steptimer.utils.JedisData.deleteFromRedis;
-
 /**
  * Created by sean on 6/13/2017.
  */
