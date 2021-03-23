@@ -28,6 +28,7 @@ public class FindReservation {
         String reservationId = request.params(":reservationId");
         String dueDateGreaterThanString = request.queryParams("dueDateGreaterThan");
         String dueDateLessThanString = request.queryParams("dueDateLessThan");
+        String customerId = request.queryParams("customerId");
 
         if (reservationId != null && !reservationId.isEmpty()) {
             Optional<Reservation> matchingReservation = findReservationByReservationId(reservationId);
@@ -63,7 +64,12 @@ public class FindReservation {
             List<Reservation> matchingReservations = findReservationByDueDate(dueDateGreaterThan, dueDateLessThan);
             return gson.toJson(matchingReservations);
 
-        } else return gson.toJson(getAllReservations());
+        } else if (customerId !=null && !customerId.isEmpty()){
+            List<Reservation> matchingReservations = findReservationByCustomerId(customerId);
+            return gson.toJson(matchingReservations);
+        }
+
+        return gson.toJson(getAllReservations());
     }
 
     private static List<Reservation> findReservationByDueDate(Long dueDateGreaterThan, Long dueDateLessThan) throws Exception {
@@ -87,6 +93,15 @@ public class FindReservation {
 
     public static List<Reservation> getAllReservations() throws Exception{
         List<Reservation> reservations = JedisData.getEntities(Reservation.class);
+        for (Reservation reservation: reservations) {
+            Optional<Customer> matchingCustomer = JedisData.getEntity(Customer.class, reservation.getCustomerId().toLowerCase());
+            reservation.setCustomerName(matchingCustomer.get().getCustomerName());
+        }
+        return reservations;
+    }
+
+    public static List<Reservation> findReservationByCustomerId(String customerId) throws Exception{
+        List<Reservation> reservations = JedisData.getEntitiesByIndex(Reservation.class, "CustomerId", customerId);
         for (Reservation reservation: reservations) {
             Optional<Customer> matchingCustomer = JedisData.getEntity(Customer.class, reservation.getCustomerId().toLowerCase());
             reservation.setCustomerName(matchingCustomer.get().getCustomerName());
