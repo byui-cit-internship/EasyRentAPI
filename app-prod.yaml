@@ -91,13 +91,13 @@ spec:
   domains:
     - easyrent-api-prod.cit362.com
 ---
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: easyrent-api-prod-autoscaler
 spec:
   scaleTargetRef:
-    apiVersion: apps/v1
+    apiVersion: apps/v2beta2
     kind: Deployment
     name: easyrent-api-prod-autoscaler
   minReplicas: 1
