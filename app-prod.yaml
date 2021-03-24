@@ -99,7 +99,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v2beta2
     kind: Deployment
-    name: easyrent-api-prod-autoscaler
+    name: easyrent-prod
   minReplicas: 1
   maxReplicas: 10
   metrics:
