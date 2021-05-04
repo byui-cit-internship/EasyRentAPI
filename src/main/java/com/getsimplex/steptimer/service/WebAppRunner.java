@@ -69,8 +69,15 @@ public class WebAppRunner {
             return callUserDatabase(req);
         });
         post("/reservations",((request, response) -> {
-            response.type("application/json");
-            return CreateReservation.handleRequest(request);
+            try {
+                response.type("application/json");
+                CreateReservation.handleRequest(request);
+            } catch (Exception e){
+                response.status(500);
+                response.body(e.getMessage());
+
+            }
+            return "Ok";
         }));
 
         put("/reservations",((request, response) ->{

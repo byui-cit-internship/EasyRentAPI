@@ -32,7 +32,7 @@ public class CreateReservation {
         if (newReservation != null && newReservation.getReservationId() != null && newReservation.getReservationItems() != null && !newReservation.getReservationItems().isEmpty() && newReservation.getCustomerId() != null) {
            Optional customerOptional = FindCustomer.findCustomer(newReservation.getCustomerId());
            if (!customerOptional.isPresent()){
-               throw new Exception("Invalid Reservation " + gson.toJson(newReservation));
+               throw new Exception("Customer does not exist " + newReservation.getCustomerId()+" . Try creating the customer first.");
            }
            if (newReservation.getReservationItems().stream().anyMatch(reservationItem -> reservationItem.getItemId()==null)){
                throw new Exception ("All reservation items must have an itemId");
